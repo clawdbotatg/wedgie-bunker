@@ -151,6 +151,7 @@ def load(n):
     g.map = False
     g.done = False
     g.hud = True
+    g.ms = getattr(g, "ms", 0)
     g.seen = bytearray(g.mw * g.mh)       # what the map shows: cells you've been near
 
 
@@ -471,6 +472,7 @@ def draw_map():
     px, py = ox + g.px * s // 256, oy + g.py * s // 256
     lcd.line(px, py, px + cos(g.ang) * 8 // 4096, py + sin(g.ang) * 8 // 4096, YL)
     lcd.fill_rect(px - 1, py - 1, 3, 3, W)
+    lcd.text("%d ms a frame" % g.ms if g.ms else "ms a frame: soon", 4, VH - 10, RAMP[7])
 
 
 def look_around():
@@ -616,15 +618,16 @@ def play(n):
         step()
         frame()
         busy += time.ticks_diff(time.ticks_ms(), t)
-        if g.frames & 127 == 0:                   # the real frame time, for wedgie.py / the Output pane
-            print("bunker: %d ms a frame (budget %d)" % (busy >> 7, FRAME))
+        if g.frames & 127 == 0:                   # the real frame time: on the map (Y), and over USB
+            g.ms = busy >> 7
+            print("bunker: %d ms a frame (budget %d)" % (g.ms, FRAME))
             busy = 0
         if g.done:
             return True
         if g.hp <= 0:
             return False
         left = FRAME - time.ticks_diff(time.ticks_ms(), t)
-        time.sleep_ms(left if left > 1 else 1)
+        time.sleep_ms(left if left > 4 else 4)    # USB runs in here: a slow frame still leaves it 4 ms
 
 
 def run():
