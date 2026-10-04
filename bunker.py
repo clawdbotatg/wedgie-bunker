@@ -1359,10 +1359,15 @@ def play(n):
     load(n)
     look_around()
     gc.collect()
+    busy = 0
     while True:
         t = time.ticks_ms()
         step()
         frame()
+        busy += time.ticks_diff(time.ticks_ms(), t)
+        if g.frames & 127 == 0:                   # the real frame time, for wedgie.py / the Output pane
+            print("bunker: %d ms a frame (budget %d)" % (busy >> 7, FRAME))
+            busy = 0
         if g.done:
             return True
         if g.hp <= 0:
