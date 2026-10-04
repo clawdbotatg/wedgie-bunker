@@ -34,8 +34,11 @@ column's wall depth. Only the 3D view is pushed each frame; the status bar only 
 
 ## Files
 
-- `bunker.py`: the game. **Run `./build.sh` after changing it** and commit `bunker.mpy` too: the wedgie
-  runs the compiled `bunker.mpy` (an RP2040 can't compile this much Python at start).
+- `bunker.py`: the entry, tiny on purpose: the wedgie's boot loader reads its imports and fills the boot
+  bar as each part loads (it can't read a compiled file's imports).
+- `bunker_art.py`: palette, textures, sprites, guns. `bunker_game.py`: the game.
+  **Run `./build.sh` after changing either** and commit the `.mpy` files: the wedgie runs those
+  (an RP2040 can't compile this much Python at start).
 - `bunker_draw.py`: the renderer in viper. Viper is machine code, so it stays `.py` and compiles on the wedgie.
 
 ## License
