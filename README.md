@@ -32,6 +32,12 @@ A raycaster in viper: one ray per 2-px column, the column drawn straight into th
 (ceiling, textured wall, floor). Monsters and pickups are 16x16 billboards checked against each
 column's wall depth. Only the 3D view is pushed each frame; the status bar only when it changes.
 
+## Files
+
+- `bunker.py`: the game. **Run `./build.sh` after changing it** and commit `bunker.mpy` too: the wedgie
+  runs the compiled `bunker.mpy` (an RP2040 can't compile this much Python at start).
+- `bunker_draw.py`: the renderer in viper. Viper is machine code, so it stays `.py` and compiles on the wedgie.
+
 ## License
 
 MIT.
