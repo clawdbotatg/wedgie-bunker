@@ -598,12 +598,12 @@ def step():
         look_around()
 
 
-def wait_a():
+def wait_a(also=()):
     keys.pressed()
     while True:
         for k in keys.pressed():
-            if k == "A":
-                return
+            if k == "A" or k in also:
+                return k
         time.sleep_ms(30)
 
 
@@ -634,10 +634,19 @@ def run():
     level = save.load("level", 1) - 1
     if not 0 <= level < len(LEVELS):
         level = 0
-    ui.page(lcd, "Demon Bunker", [("Level %d: %s" % (level + 1, LEVELS[level][0]), ui.INK),
-                                  ("stick  walk and turn", ui.MUTED), ("B + stick  strafe", ui.MUTED),
-                                  ("A  fire   X  weapon", ui.GREEN_D), ("Y  map", ui.MUTED)], "A  start")
-    wait_a()
+    while True:
+        ui.page(lcd, "Demon Bunker", [("Level %d: %s" % (level + 1, LEVELS[level][0]), ui.INK),
+                                      ("stick  walk and turn", ui.MUTED), ("B + stick  strafe", ui.MUTED),
+                                      ("A  fire   X  weapon", ui.GREEN_D), ("Y  map", ui.MUTED)],
+                "A  start", show=False)
+        if level:
+            ui.say(lcd, "Y  start over", 206, ui.RED)
+        lcd.show()
+        if wait_a(("Y",) if level else ()) == "A":
+            break
+        if ui.ask(lcd, "Start over?", ["Back to level 1."], "start over", "keep"):
+            level = 0
+            save.store("level", 1)
     fresh()
     while True:
         t0 = time.ticks_ms()

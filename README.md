@@ -24,7 +24,8 @@ Walk into a door to open it. The red door needs the red key. Barrels explode whe
 
 ## Saves
 
-- `level`: the level you're on (1-3). Set it to 3 to start at Hell Gate.
+- `level`: the level you're on (1-3). Set it to 3 to start at Hell Gate. Past level 1, Y on the
+  title screen starts over from level 1 (after a yes).
 
 ## How it draws
 
